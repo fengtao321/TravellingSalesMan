@@ -185,135 +185,100 @@ public class TSPExample {
 		System.out.println(selectedFile.getName());
 		}
 
-		// create the TSP problem instance and display panel
-		TSPInstance instance = new TSPInstance(selectedFile);
-		TSPPanel panel = new TSPPanel(instance);
-		panel.setAutoRepaint(true);
-		
-		// create other components on the display
-		JTextArea progressText = new JTextArea();
-		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setTopComponent(panel);
-		
-		//create right components on the display
-		JSplitPane horizontalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		horizontalPane.setTopComponent(new JScrollPane(progressText));
-		JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		graphicUI(selectedFile, algorithmSelection);
 
-		rightPanel.add(fileChooser);
-		rightPanel.add(option);
-		
-		horizontalPane.setBottomComponent(rightPanel);
-		horizontalPane.setDividerLocation(width/2);
-		
-		splitPane.setBottomComponent(horizontalPane);
-		splitPane.setDividerLocation(height/2);
-		splitPane.setResizeWeight(1.0);
-		
-
-		
-		// display the panel on a window
-		JFrame frame = new JFrame("Traveling Salesman Problem");
-		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(width, height);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-
-		//algorithm selection before the panel is shown
-		if (algorithmSelection == 0 ) {
-			System.out.println(algorithmOptions[algorithmSelection]);
-			geneticAlg(instance, panel, progressText);
-		}
-		if (algorithmSelection == 1 ) {
-			System.out.println(algorithmOptions[algorithmSelection]);
-		}
-		
-		//selection after the panel is shown 
-//		boolean runOption = true;
-//		while(true) {
-//			String alg = (String) option.getValue();
-//			if(alg.equals(algorithmOptions[2])) {
-//				runOption = true;	
-//			}
-//			if((alg.equals(algorithmOptions[0])) && (runOption == true)) {
-//				runOption = false;
-//				selectedFile = fileChooser.getSelectedFile();
-//				System.out.println(alg);
-//				System.out.println(selectedFile.getName());
-//
-//
-//				TSPInstance instance2 = new TSPInstance(selectedFile);
-//				TSPPanel panel2 = new TSPPanel(instance2);
-//				panel2.setAutoRepaint(true);
-//
-//				/*for test*/
-//				
-//				// create other components on the display
-//				JTextArea progressText2 = new JTextArea();
-//				
-//				JSplitPane splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-//				splitPane2.setTopComponent(panel2);
-//				
-//				//create right components on the display
-//				JSplitPane horizontalPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-//				horizontalPane2.setTopComponent(new JScrollPane(progressText));
-//				//JPanel rightPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//
-//			//	rightPanel2.add(fileChooser);
-//			//	rightPanel2.add(option);
-//				
-//			//	horizontalPane2.setBottomComponent(rightPanel2);
-//			//	horizontalPane2.setDividerLocation(width/2);
-//				
-//				splitPane2.setBottomComponent(horizontalPane2);
-//				splitPane2.setDividerLocation(height/2);
-//				splitPane2.setResizeWeight(1.0);
-//				
-//
-//				
-//				// display the panel on a window
-//				JFrame frame2 = new JFrame("Traveling Salesman Problem");
-//				frame2.getContentPane().setLayout(new BorderLayout());
-//				frame2.getContentPane().add(splitPane, BorderLayout.CENTER);
-//				frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//				frame2.setSize(width, height);
-//				frame2.setLocationRelativeTo(null);
-//				frame2.setVisible(true);
-//				/*end of test*/
-//				
-//				
-//				
-//				
-//				geneticAlg(instance2, panel2, progressText2);
-//				
-//			}
-//			
-//			if(alg.equals(algorithmOptions[1])&& (runOption == true)) {
-//				runOption = false;
-//				System.out.println(alg);
-//			}
-//
-//		}
-//		
-
-
-
-        // Print final results
-    //    System.out.println("Finished");
-    //    System.out.println("Final distance: " + pop.getFittest().getDistance());
-    //    System.out.println("Solution:");
-    //    System.out.println(pop.getFittest());
-        
-     // clear existing tours in display
-    
-
+	
 	}
+	
+	public static void graphicUI(File selectedFile, int algorithmSelection) throws IOException {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setCurrentDirectory(new File("./data/tsp/pr76.tsp"));
+	
+		Object[] algorithmOptions = {"Genetic algorithm", "Lin-Kernighan algorithm", "RUN"};
+		JOptionPane option = new JOptionPane("Select an algorithm and run: ",JOptionPane.PLAIN_MESSAGE,JOptionPane.OK_CANCEL_OPTION,null, algorithmOptions);
+		
+		// create the TSP problem instance and display panel
+				TSPInstance instance = new TSPInstance(selectedFile);
+				TSPPanel panel = new TSPPanel(instance);
+				panel.setAutoRepaint(false);
+				
+				// create other components on the display
+				JTextArea progressText = new JTextArea();
+				
+				JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+				splitPane.setTopComponent(panel);
+				
+				//create right components on the display
+				JSplitPane horizontalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+				horizontalPane.setTopComponent(new JScrollPane(progressText));
+				JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+				rightPanel.add(fileChooser);
+				rightPanel.add(option);
+				
+				horizontalPane.setBottomComponent(rightPanel);
+				horizontalPane.setDividerLocation(width/2);
+				
+				splitPane.setBottomComponent(horizontalPane);
+				splitPane.setDividerLocation(height/2);
+				splitPane.setResizeWeight(1.0);
+				
+
+				
+				// display the panel on a window
+				JFrame frame = new JFrame("Traveling Salesman Problem");
+				frame.getContentPane().setLayout(new BorderLayout());
+				frame.getContentPane().add(splitPane, BorderLayout.CENTER);
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame.setSize(width, height);
+				frame.setLocationRelativeTo(null);
+				frame.setVisible(true);
+				
+				//algorithm selection before the panel is shown
+				if (algorithmSelection == 0 ) {
+				//	System.out.println(algorithmOptions[algorithmSelection]);
+					geneticAlg(instance, panel, progressText);
+				}
+				if (algorithmSelection == 1 ) {
+				//	System.out.println(algorithmOptions[algorithmSelection]);
+				}
+				
+				
+				//selection after the panel is shown 
+				boolean runOption = true;
+				while(true) {
+					String alg = (String) option.getValue();
+					if(alg.equals(algorithmOptions[2])) {
+						runOption = true;	
+					}
+					if((alg.equals(algorithmOptions[0])) && (runOption == true)) {
+						runOption = false;
+						selectedFile = fileChooser.getSelectedFile();
+						System.out.println(alg);
+						System.out.println(selectedFile.getName());
+		
+		
+						TSPInstance instance2 = new TSPInstance(selectedFile);
+						TSPPanel panel2 = new TSPPanel(instance2);
+						panel2.setAutoRepaint(true);
+						
+						graphicUI(selectedFile, 0);
+		
+					}
+					
+					if(alg.equals(algorithmOptions[1])&& (runOption == true)) {
+						runOption = false;
+						System.out.println(alg);
+					}
+		
+				}
+			
+	}
+	
 	public static void geneticAlg(TSPInstance instance, TSPPanel panel, JTextArea progressText) {
 		long startTime = System.currentTimeMillis();
-		((TSPPanel) panel).clearTours();
+		//((TSPPanel) panel).clearTours();
 		
 		// create the optimization problem and evolutionary algorithm
 		Country country = new Country(instance);

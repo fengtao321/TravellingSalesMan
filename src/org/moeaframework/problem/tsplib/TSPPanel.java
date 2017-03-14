@@ -50,12 +50,12 @@ public class TSPPanel extends JPanel {
 	/**
 	 * The TSPLIB problem instance.
 	 */
-	private final TSPInstance problem;
+	private  TSPInstance problem;
 	
 	/**
 	 * The displayed tours and their display settings.
 	 */
-	private final Map<Tour, TourDisplaySetting> tours;
+	private  Map<Tour, TourDisplaySetting> tours;
 	
 	/**
 	 * The width of nodes in the graphical display.
@@ -394,12 +394,12 @@ public class TSPPanel extends JPanel {
 		/**
 		 * The paint/color used when rendering the tour.
 		 */
-		private final Paint paint;
+		private  Paint paint;
 		
 		/**
 		 * The line stroke used when rendering the tour.
 		 */
-		private final Stroke stroke;
+		private  Stroke stroke;
 		
 		/**
 		 * Constructs a new, default tour display setting.

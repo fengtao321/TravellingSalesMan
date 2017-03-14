@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class TourManager {
 	// Holds our cities
     private static ArrayList destinationCities = new ArrayList<City>();
+    
+    public static void init() {
+    	destinationCities.clear();;
+    }
 
     // Adds a destination city
     public static void addCity(City city) {

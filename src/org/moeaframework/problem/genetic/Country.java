@@ -16,6 +16,7 @@ public class Country {
 	
 	public TourManager addCities () {
 		TourManager manager = new TourManager();
+		manager.init();
 		
 		City city;
 		NodeCoordinates test = (NodeCoordinates) problem.getDistanceTable();
