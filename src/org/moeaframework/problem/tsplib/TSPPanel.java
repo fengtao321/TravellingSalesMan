@@ -74,6 +74,9 @@ public class TSPPanel extends JPanel {
 	 */
 	private boolean autoRepaint;
 	
+	private Graphics2D g2;
+	private Ellipse2D point;
+	
 	/**
 	 * Constructs a new panel for displaying a TSPLIB problem instance.
 	 * 
@@ -168,6 +171,7 @@ public class TSPPanel extends JPanel {
 	public void clearTours() {
 		synchronized (tours) {
 			tours.clear();
+			
 		}
 		
 		if (autoRepaint) {
@@ -229,7 +233,7 @@ public class TSPPanel extends JPanel {
 	 * @return the node coordinates into display coordinates on the screen
 	 */
 	private double[] toDisplayCoordinates(Node node, boolean isGeographical) {
-		System.out.println("X is "+node);
+		//System.out.println("X is "+node);
 		double[] position = node.getPosition();
 		double x = position[1];
 		double y = position[0];
@@ -249,13 +253,17 @@ public class TSPPanel extends JPanel {
 			super.paint(g);
 		}
 	}
+	
+	public void removeNodes(){
+
+	}
 
 	@Override
 	protected synchronized void paintComponent(Graphics g) {
 //		if(problem!=null) {
 		super.paintComponent(g);
 
-		Graphics2D g2 = (Graphics2D)g;
+		g2 = (Graphics2D)g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		// get the display data
@@ -300,9 +308,9 @@ public class TSPPanel extends JPanel {
 
 			g2.setPaint(displaySettings.getPaint());
 			g2.setStroke(displaySettings.getStroke());
-			System.out.println("tour.size()" + tour.size());
+		//	System.out.println("tour.size()" + tour.size());
 			for (int i = 0; i < tour.size(); i++) {
-				System.out.println("work on" + i);				
+		//		System.out.println("work on" + i);				
 				Node node1 = displayData.get(tour.get(i));
 				Node node2;
 				if(i == tour.size()-1) {
@@ -312,10 +320,10 @@ public class TSPPanel extends JPanel {
 					node2 = displayData.get(tour.get(i+1));
 				}
 				if((node1 ==null) || (node2 == null)) {
-				System.out.println(tour.get(i) + "node1 " + node1);
-				System.out.println(tour.get(i+1) + "node2 " + node2);
-				System.out.println(tour);
-				System.out.println(displayData);
+		//		System.out.println(tour.get(i) + "node1 " + node1);
+		//		System.out.println(tour.get(i+1) + "node2 " + node2);
+		//		System.out.println(tour);
+		//		System.out.println(displayData);
 				}
 				if((node1 !=null) && (node2 != null)) {
 				double[] position1 = toDisplayCoordinates(node1, isGeographical);
@@ -336,6 +344,9 @@ public class TSPPanel extends JPanel {
 		// draw the nodes
 		g2.setColor(getForeground());
 
+	
+	
+
 		for (int i = 1; i <= displayData.size(); i++) {
 			Node node = displayData.get(i);
 			double[] position = toDisplayCoordinates(node, isGeographical);
@@ -348,6 +359,7 @@ public class TSPPanel extends JPanel {
 
 			g2.fill(point);
 			g2.draw(point);
+//			
 		}
 //		}
 	}

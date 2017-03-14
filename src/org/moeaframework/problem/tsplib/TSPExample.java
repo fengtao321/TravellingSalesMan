@@ -25,13 +25,19 @@ package org.moeaframework.problem.tsplib;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -165,6 +171,13 @@ public class TSPExample {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setCurrentDirectory(new File("./data/tsp/pr76.tsp"));
 		
+		//add Algorithm Selection
+		Object[] algorithmOptions = {"Genetic algorithm", "Lin-Kernighan algorithm", "RUN"};
+		Object[] algorithmOption = {"Genetic algorithm", "Lin-Kernighan algorithm"};
+		JOptionPane option = new JOptionPane("Select an algorithm and run: ",JOptionPane.PLAIN_MESSAGE,JOptionPane.OK_CANCEL_OPTION,null, algorithmOptions);
+		int algorithmSelection = option.showOptionDialog(null, "Select an algorithm and run:", null, JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,null, algorithmOption, algorithmOptions[0]);
+
+		//data source selection before the panel is shown
 		int result = fileChooser.showOpenDialog(fileChooser);
 		File selectedFile = new File("./data/tsp/pr76.tsp");
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -175,10 +188,9 @@ public class TSPExample {
 		// create the TSP problem instance and display panel
 		TSPInstance instance = new TSPInstance(selectedFile);
 		TSPPanel panel = new TSPPanel(instance);
-		panel.setAutoRepaint(false);
+		panel.setAutoRepaint(true);
 		
 		// create other components on the display
-		StringBuilder progress = new StringBuilder();
 		JTextArea progressText = new JTextArea();
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -187,9 +199,10 @@ public class TSPExample {
 		//create right components on the display
 		JSplitPane horizontalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		horizontalPane.setTopComponent(new JScrollPane(progressText));
-		JPanel rightPanel = new JPanel();
+		JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		rightPanel.add(fileChooser);
+		rightPanel.add(option);
 		
 		horizontalPane.setBottomComponent(rightPanel);
 		horizontalPane.setDividerLocation(width/2);
@@ -208,78 +221,133 @@ public class TSPExample {
 		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+
+		//algorithm selection before the panel is shown
+		if (algorithmSelection == 0 ) {
+			System.out.println(algorithmOptions[algorithmSelection]);
+			geneticAlg(instance, panel, progressText);
+		}
+		if (algorithmSelection == 1 ) {
+			System.out.println(algorithmOptions[algorithmSelection]);
+		}
 		
+		//selection after the panel is shown 
+//		boolean runOption = true;
+//		while(true) {
+//			String alg = (String) option.getValue();
+//			if(alg.equals(algorithmOptions[2])) {
+//				runOption = true;	
+//			}
+//			if((alg.equals(algorithmOptions[0])) && (runOption == true)) {
+//				runOption = false;
+//				selectedFile = fileChooser.getSelectedFile();
+//				System.out.println(alg);
+//				System.out.println(selectedFile.getName());
+//
+//
+//				TSPInstance instance2 = new TSPInstance(selectedFile);
+//				TSPPanel panel2 = new TSPPanel(instance2);
+//				panel2.setAutoRepaint(true);
+//
+//				/*for test*/
+//				
+//				// create other components on the display
+//				JTextArea progressText2 = new JTextArea();
+//				
+//				JSplitPane splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+//				splitPane2.setTopComponent(panel2);
+//				
+//				//create right components on the display
+//				JSplitPane horizontalPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+//				horizontalPane2.setTopComponent(new JScrollPane(progressText));
+//				//JPanel rightPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//
+//			//	rightPanel2.add(fileChooser);
+//			//	rightPanel2.add(option);
+//				
+//			//	horizontalPane2.setBottomComponent(rightPanel2);
+//			//	horizontalPane2.setDividerLocation(width/2);
+//				
+//				splitPane2.setBottomComponent(horizontalPane2);
+//				splitPane2.setDividerLocation(height/2);
+//				splitPane2.setResizeWeight(1.0);
+//				
+//
+//				
+//				// display the panel on a window
+//				JFrame frame2 = new JFrame("Traveling Salesman Problem");
+//				frame2.getContentPane().setLayout(new BorderLayout());
+//				frame2.getContentPane().add(splitPane, BorderLayout.CENTER);
+//				frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				frame2.setSize(width, height);
+//				frame2.setLocationRelativeTo(null);
+//				frame2.setVisible(true);
+//				/*end of test*/
+//				
+//				
+//				
+//				
+//				geneticAlg(instance2, panel2, progressText2);
+//				
+//			}
+//			
+//			if(alg.equals(algorithmOptions[1])&& (runOption == true)) {
+//				runOption = false;
+//				System.out.println(alg);
+//			}
+//
+//		}
+//		
 
 
+
+        // Print final results
+    //    System.out.println("Finished");
+    //    System.out.println("Final distance: " + pop.getFittest().getDistance());
+    //    System.out.println("Solution:");
+    //    System.out.println(pop.getFittest());
+        
+     // clear existing tours in display
+    
+
+	}
+	public static void geneticAlg(TSPInstance instance, TSPPanel panel, JTextArea progressText) {
+		long startTime = System.currentTimeMillis();
+		((TSPPanel) panel).clearTours();
 		
 		// create the optimization problem and evolutionary algorithm
 		Country country = new Country(instance);
 		TourManager manager =country.addCities();
-		
-		// Initialize population
-        Population pop = new Population(50, true);
-        
-        // Evolve population for 100 generations
-        pop = GA.evolvePopulation(pop);
-        for (int i = 0; i < 100; i++) {
-            pop = GA.evolvePopulation(pop);
-        }
-        
-
-        // Print final results
-        System.out.println("Finished");
-        System.out.println("Final distance: " + pop.getFittest().getDistance());
-        System.out.println("Solution:");
-        System.out.println(pop.getFittest());
-        
-     // clear existing tours in display
-     ((TSPPanel) panel).clearTours();
-        
-        // display current optimal solutions with red line   	
-		GeneticTour geneticTour = pop.getFittest();
-		Tour best = Tour.createTour(geneticTour.getTour(manager));
-		((TSPPanel) panel).displayTour(best, Color.RED, new BasicStroke(2.0f));
-		progress.insert(0, "Iteration " + pop.getFittest() + ": " +
-				pop.getFittest().getDistance() + "\n");
-		progressText.setText(progress.toString());
-        
-     // repaint the TSP display
-     	panel.repaint();
-
-	/*	
-		Algorithm algorithm = AlgorithmFactory.getInstance().getAlgorithm(
-				"NSGAII", properties, problem);
-		
-		int iteration = 0;
-		
-		// now run the evolutionary algorithm
-		while (frame.isVisible()) {
-			algorithm.step();
-			iteration++;
-			
-			// clear existing tours in display
-			((TSPPanel) panel).clearTours();
-
-			// display population with light gray lines
-			if (algorithm instanceof EvolutionaryAlgorithm) {
-				EvolutionaryAlgorithm ea = (EvolutionaryAlgorithm)algorithm;
+		StringBuilder progress = new StringBuilder();
 				
-				for (Solution solution : ea.getPopulation()) {
-					((TSPPanel) panel).displayTour(toTour(solution), lightGray);
-				}
-			}
-			
-			// display current optimal solutions with red line
-			Tour best = toTour(algorithm.getResult().get(0));
+		// Initialize population
+		Population pop = new Population(50, true);
+		        
+		// Evolve population for 100 generations
+		pop = GA.evolvePopulation(pop);
+		for (int i = 0; i < 100; i++) {
+		    pop = GA.evolvePopulation(pop);
+		}
+        
+	        // display current optimal solutions with red line   	
+			GeneticTour geneticTour = pop.getFittest();
+			Tour best = Tour.createTour(geneticTour.getTour(manager));
 			((TSPPanel) panel).displayTour(best, Color.RED, new BasicStroke(2.0f));
-			progress.insert(0, "Iteration " + iteration + ": " +
-					best.distance(instance) + "\n");
-			progressText.setText(progress.toString());
 			
-			// repaint the TSP display
-			panel.repaint();
-		}			*/
+			//String to be shown on the screen
+			long endTime   = System.currentTimeMillis();
+			long totalTime = endTime - startTime;
+			
+			progress.insert(0, "Iteration " + pop.getFittest() + "\n");
+			progress.insert(1, "distance: " + pop.getFittest().getDistance() + "\n");
+			progress.insert(1, "running time: " + totalTime + "\n");
+			progressText.setText(progress.toString());
+	        
+	     // repaint the TSP display
+	     	panel.repaint();
+	     	     	
+	     	return;
 	}
-//	}
+	//	}
 
 }
